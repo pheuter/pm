@@ -1,4 +1,4 @@
-# PM (*Post Mortem*)
+# pm (*post mortem*)
 
 A stack-based programming language resembling the likes of Forth, Factor.
 
