@@ -23,3 +23,5 @@ Else:
 To run a file: ``./interpreter.js test/test.pm``
   
 To run interactively: ``./interpreter.js``
+
+To run through the web: ``cd web && node server.js`` and navigate to ``localhost:8080``
