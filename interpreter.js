@@ -16,12 +16,14 @@ var createWord = function (ast) {
     eval(ast.body);
   }
 };
+var createArray = function (v) {
+  return parser.parse("{"+v.join(" ")+"}")[0];
+};
+var createString = function (v) {
+  return parser.parse("\""+v+"\"")[0];
+};
 var createNumber = function (v) {
-  return {
-    type: "NUMBER",
-    show: v,
-    value: v
-  }
+  return parser.parse(v+"")[0];
 };
 var createBoolean = function (v) { // Runtime datatype, as opposed to other parse-time data types
   return {
@@ -29,7 +31,7 @@ var createBoolean = function (v) { // Runtime datatype, as opposed to other pars
     show: v ? "t" : "f",
     value: v
   }
-}
+};
 
 var eval = function (ast) { // Evaluate JSON AST
   ast.forEach(function (val) {
@@ -174,5 +176,47 @@ words = {
     var t = stack.pop();
     var cond = stack.pop();
     cond.value ? eval(t.value) : eval(f.value);
+  },
+  "length": function (stack) {
+    var item = stack.pop();
+    stack.push(createNumber(item.value.length));
+  },
+  "range": function (stack) {
+    var to = stack.pop().value;
+    var from = stack.pop().value;
+    var array = [];
+    if (to > from) for(var i = from; i <= to; i++) array.push(i);
+    else for(var i = from; i >= to; i--) array.push(i);
+    stack.push(createArray(array));
+  },
+  "each": function (stack) {
+    var quote = stack.pop();
+    var array = stack.pop();
+    array.value.forEach(function (v) {
+      stack.push({type: v.type, show: v.show, value: v.value});
+      eval(quote.value);
+    });
+  },
+  "map": function (stack) {
+    var quote = stack.pop();
+    var array = stack.pop();
+    var aux = [];
+    array.value.forEach(function (v) {
+      stack.push({type: v.type, show: v.show, value: v.value});
+      eval(quote.value);
+      aux.push(stack.pop().value);
+    });
+    stack.push(createArray(aux));
+  },
+  "reverse": function (stack) {
+    var val = stack.pop()
+    if (val.type == "ARRAY") {
+      var items = []; 
+      val.value.forEach(function(v) {
+        items.push(v.value)}); 
+        stack.push(createArray(items.reverse())
+      );
+    }
+    else if (val.type == "STRING") stack.push(createString(val.value.split('').reverse().join('')));
   }
 };
