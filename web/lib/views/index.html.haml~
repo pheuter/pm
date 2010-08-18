@@ -1,0 +1,22 @@
+:javascript
+  function refresh() {
+    eval({type: "REFRESH"});
+  }
+
+  function submitenter(myfield,e)  {
+    var keycode;
+    if (window.event) {
+      keycode = window.event.keyCode;
+    } else if (e) {
+      keycode = e.which;
+    } else {
+      return true;
+    }
+    if (keycode == 13) {
+      eval(parser.parse($('#inputtext').val()));
+      refresh();
+      return false;
+    } else {
+      return true;
+    }
+  }

@@ -1,0 +1,20 @@
+:javascript
+  function submitenter(myfield,e)  {
+    var keycode;
+    if (window.event) {
+      keycode = window.event.keyCode;
+    } else if (e) {
+      keycode = e.which;
+    } else {
+      return true;
+    }
+    if (keycode == 13) {
+      $('#stack').text('');
+      $('#stdout').text('');
+      run(parser.parse($('#inputtext').val()));
+      $('#inputtext').val('').focus();
+      return false;
+    } else {
+      return true;
+    }
+  }

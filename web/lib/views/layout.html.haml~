@@ -1,0 +1,24 @@
+%html{xmlns: "http://www.w3.org/1999/xhtml"}
+  %head
+    %title pm | stack-based programming language | Web Frontend
+    %link{ rel: 'stylesheet', href: '/public/css/style.css' }
+    %link{ href: 'http://fonts.googleapis.com/css?family=Reenie+Beanie', rel: 'stylesheet', type: 'text/css' }
+    %link{ href: 'http://fonts.googleapis.com/css?family=Vollkorn', rel: 'stylesheet', type: 'text/css' }
+    %link{ href: 'http://fonts.googleapis.com/css?family=Nobile', rel: 'stylesheet', type: 'text/css' }
+    %link{ href: 'http://fonts.googleapis.com/css?family=Cardo', rel: 'stylesheet', type: 'text/css' }
+    %link{ href: 'http://fonts.googleapis.com/css?family=IM+Fell+English+SC', rel: 'stylesheet', type: 'text/css' }
+    %script{ src: '/public/js/jquery-1.4.2.min.js', type: 'text/javascript' }
+    %script{ src: '/public/js/parser.js', type: 'text/javascript' }
+    %script{ src: '/public/js/interpreter.js', type: 'text/javascript' }
+    
+  %body
+    %div#stdout
+      %p
+    %div#search
+      %form{ name: 'input'}
+        %input{ type: 'text', id: 'inputtext', value: '1 1 + .', onKeyPress: 'return submitenter(this,event);' }
+      %div#stack
+        %p
+    %a{ href: 'http://markfayngersh.com' }
+      %p{ style: 'color: #000099; font-family: Reenie Beanie, arial, serif; font-size:32px' } Mark Fayngersh
+    != body

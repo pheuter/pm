@@ -23,7 +23,7 @@ String
   = "\"" str:[^"\n]+ "\"" { return {type:"STRING", show: "\""+str.join("")+"\"",value:str.join("")}; }
 
 Array
-  = "{" items:(" "* (expr))* " "* "}" { var i = []; var s = []; items.forEach(function (v) {v.forEach(function (val) { if(val.type) { i.push(val.value); s.push(val.show);}});}); return {type:"ARRAY", show: "{"+s+"}",value:i};}
+  = "{" items:(" "* (expr))* " "* "}" { var i = []; var s = []; items.forEach(function (v) {v.forEach(function (val) { if(val.type) { i.push({type: val.type, show: val.show, value: val.value}); s.push(val.show);}});}); return {type:"ARRAY", show: "{"+s+"}",value:i};}
 
 Quote
   = "[" e:expr* "]" { var s = []; e.forEach(function (v) {if(v.type) {s.push(v.show)}}); return {type: "QUOTE", show: "["+s.join(' ')+"]", value:e}; }

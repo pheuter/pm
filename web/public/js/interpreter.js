@@ -1,15 +1,4 @@
-#!/usr/bin/env node
-
-var puts = require("sys").puts;
-var print = require("sys").print;
-var fs = require("fs");
-var parser = require("./parser").parser();
-
-var stdin = process.openStdin();
-stdin.setEncoding('utf8');
-
 var stack = [];
-var buffer = "";
 
 var createWord = function (ast) {
   words[ast.word.value] = function(stack) {
@@ -42,33 +31,18 @@ var eval = function (ast) { // Evaluate JSON AST
     if (val.type == "WORD") if (val.value == "t") stack.push(createBoolean(true)); else if (val.value == "f") stack.push(createBoolean(false)); else words[val.value](stack);
     if (val.type == "DEFINITION") createWord(val);
   });
-}
+};
 
-if (process.argv[2]) { // File input
-  fs.readFile(process.argv[2], function (err, data) {
-    eval(parser.parse(data.toString()));
-    puts("----------------Stack-------------------"); 
-    stack.forEach(function (v) {puts(v.show);});
-    puts("-----------------End-------------------");
-    process.exit();
+var run = function(ast) {
+  eval(ast);
+  stack.forEach(function (v) { 
+    $("<p>"+v.show+"</p>").appendTo("#stack"); 
   });
-} else { // Standard input
-  stdin.on('data', function(data) {
-    if (data.match(/\n/)) {
-      var line = buffer + data.substr(0,data.indexOf("\n"));
-      eval(parser.parse(line));
-      puts("-----------------------------------"); 
-      stack.forEach(function (v) {puts(v.show);});
-      puts("-----------------------------------");
-    } else buffer += data;
-  });
-}
-
+};
 
 // -------------------------------- Core Library -------------------------------- \\
 
 words = {
-  
   "+": function (stack) {
     operands = []
     operands.push(stack.pop());
@@ -94,16 +68,16 @@ words = {
     stack.push(createNumber(operands[1].value / operands[0].value)); 
   },
   ".": function (stack) {
-    puts(stack.pop().show);
+    $("<p>"+stack.pop().show+"</p>").appendTo("#stdout");
   },
   "print": function (stack) {
     var val = stack.pop();
-    print(val.show);
+    $("<p>"+val.show+"</p>").appendTo("#stdout");
     stack.push(val);
   },
   "println": function (stack) {
     var val = stack.pop();
-    puts(val.show);
+    $("<p>"+val.show+"</p>").appendTo("#stdout");
     stack.push(val);
   },
   "dup": function (stack) {
