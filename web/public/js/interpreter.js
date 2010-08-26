@@ -36,7 +36,7 @@ var eval = function (ast) { // Evaluate JSON AST
 var run = function(ast) {
   eval(ast);
   stack.forEach(function (v) { 
-    $("<p>"+v.show+"</p>").appendTo("#stack"); 
+    $("<p style=\"padding:0px;\">"+v.show+"</p>").appendTo("#stack"); 
   });
 };
 

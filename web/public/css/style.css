@@ -2,6 +2,7 @@ body {
   background-color: grey;
 }
 #stack {
+  word-wrap: break-word;
   width: 550px;
   margin-left: auto;
   margin-right: auto;
@@ -23,7 +24,7 @@ body {
 }
 #stack p {
   color: #111;
-  font-size: 28px;
+  font-size: 13px;
   font-family: 'Nobile', arial, serif;
   text-align: center;
 }
@@ -80,7 +81,8 @@ input#submit:active
 
 /* Additional Pods*/
 #stdout {
-  width: 200px;
+  word-wrap: break-word;
+  width: 350px;
   margin-left: auto;
   margin-right: auto;
   margin-top: 150px;
@@ -95,6 +97,6 @@ input#submit:active
 }
 #stdout p {
   font-family: Vollkorn, arial, serif;
-  font-size: 18px;
+  font-size: 15px;
   text-align: center;
 }
