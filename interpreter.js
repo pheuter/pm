@@ -25,7 +25,7 @@ var createString = function (v) {
 var createNumber = function (v) {
   return parser.parse(v+"")[0];
 };
-var createBoolean = function (v) { // Runtime datatype, as opposed to other parse-time data types
+var createBoolean = function (v) { // Runtime datatype, as opposed to parse-time
   return {
     type: "BOOLEAN",
     show: v ? "t" : "f",
@@ -33,14 +33,22 @@ var createBoolean = function (v) { // Runtime datatype, as opposed to other pars
   }
 };
 
-var eval = function (ast) { // Evaluate JSON AST
+var eval = function (ast) { // Walk the AST
   ast.forEach(function (val) {
     if (val.type == "NUMBER") stack.push(val);
     if (val.type == "STRING") stack.push(val);
     if (val.type == "ARRAY") stack.push(val);
     if (val.type == "QUOTE") stack.push(val);
-    if (val.type == "WORD") if (val.value == "t") stack.push(createBoolean(true)); else if (val.value == "f") stack.push(createBoolean(false)); else words[val.value](stack);
-    if (val.type == "DEFINITION") createWord(val);
+    try {
+      if (val.type == "WORD") if (val.value == "t") stack.push(createBoolean(true)); else if (val.value == "f") stack.push(createBoolean(false)); else words[val.value](stack);
+    } catch (err) {
+      puts("\033[33m"+val.value + "\033[31m not defined!\033[36m Try ( : "+val.value+" | <body> ; )");
+      puts("\033[m");
+    }
+    if (val.type == "DEFINITION") {
+      createWord(val);
+      puts("\033[32mDefined word: \033[1;32m"+val.word.value+"\033[m");
+    }
   });
 }
 
@@ -49,17 +57,19 @@ if (process.argv[2]) { // File input
     eval(parser.parse(data.toString()));
     puts("----------------Stack-------------------"); 
     stack.forEach(function (v) {puts(v.show);});
-    puts("-----------------End-------------------");
+    puts("--------------End Stack----------------");
     process.exit();
   });
 } else { // Standard input
+  puts("Welcome to the\033[1;33m pm\033[m interpreter.\nctrl-c to quit.");
   stdin.on('data', function(data) {
     if (data.match(/\n/)) {
       var line = buffer + data.substr(0,data.indexOf("\n"));
       eval(parser.parse(line));
-      puts("-----------------------------------"); 
+      puts("----------------Stack-------------------"); 
       stack.forEach(function (v) {puts(v.show);});
-      puts("-----------------------------------");
+      puts("--------------End Stack----------------");
+      puts("\n");
     } else buffer += data;
   });
 }
@@ -92,6 +102,12 @@ words = {
     operands.push(stack.pop());
     operands.push(stack.pop());
     stack.push(createNumber(operands[1].value / operands[0].value)); 
+  },
+  "^": function (stack) {
+    operands = []
+    operands.push(stack.pop());
+    operands.push(stack.pop());
+    stack.push(createNumber(Math.pow(operands[1].value,operands[0].value)))
   },
   ".": function (stack) {
     puts(stack.pop().show);

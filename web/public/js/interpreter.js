@@ -67,6 +67,12 @@ words = {
     operands.push(stack.pop());
     stack.push(createNumber(operands[1].value / operands[0].value)); 
   },
+  "^": function (stack) {
+    operands = []
+    operands.push(stack.pop());
+    operands.push(stack.pop());
+    stack.push(createNumber(Math.pow(operands[1].value,operands[0].value)))
+  },
   ".": function (stack) {
     $("<p>"+stack.pop().show+"</p>").appendTo("#stdout");
   },
