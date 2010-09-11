@@ -1,20 +1,23 @@
 :javascript
-  function submitenter(myfield,e)  {
-    var keycode;
-    if (window.event) {
-      keycode = window.event.keyCode;
-    } else if (e) {
-      keycode = e.which;
-    } else {
-      return true;
-    }
-    if (keycode == 13) {
-      $('#stack').text('');
-      $('#stdout').text('');
-      run(parser.parse($('#inputtext').val()));
-      $('#inputtext').val('').focus();
-      return false;
-    } else {
-      return true;
-    }
-  }
+  $(document).ready(function () {
+    var console2 = $('<div class="console2">');
+    console2.insertBefore("#footer");
+    var controller2 = console2.console({
+      promptLabel: 'pm> ',
+      commandValidate: function (line) {
+        return true;
+      },
+      commandHandle: function (line) {
+        try {
+          var ret = run(parser.parse(line));
+          if (ret) return ret
+          else return true;
+        } catch (e) {
+          return e.message;
+        }
+      },
+      autofocus: true,
+      animateScroll: true,
+      promptHistory: true
+    });
+  });

@@ -1,7 +1,7 @@
 var stack = [];
 
 var createWord = function (ast) {
-  words[ast.word.value] = function(stack) {
+  words[ast.word.value] = function() {
     eval(ast.body);
   }
 };
@@ -21,6 +21,13 @@ var createBoolean = function (v) { // Runtime datatype, as opposed to other pars
     value: v
   }
 };
+var pusher = function (v) {
+  if (typeof(v) == "number") stack.push(createNumber(v));
+  else if (typeof(v) == "string") stack.push(createString(v));
+  else if (typeof(v) == "boolean") stack.push(createBoolean(v));
+  else if (v.constructor.toString().indexOf("Array") != -1) stack.push(createArray(v));
+  else stack.push(v);
+};
 
 var eval = function (ast) { // Evaluate JSON AST
   ast.forEach(function (val) {
@@ -28,175 +35,191 @@ var eval = function (ast) { // Evaluate JSON AST
     if (val.type == "STRING") stack.push(val);
     if (val.type == "ARRAY") stack.push(val);
     if (val.type == "QUOTE") stack.push(val);
-    if (val.type == "WORD") if (val.value == "t") stack.push(createBoolean(true)); else if (val.value == "f") stack.push(createBoolean(false)); else words[val.value](stack);
+    try {
+      if (val.type == "WORD") if (val.value == "t") stack.push(createBoolean(true)); else if (val.value == "f") stack.push(createBoolean(false)); else words[val.value]();
+    } catch(error) {
+      throw {name : "PMError", message : val.value+" not defined (or incorrect stack params)! Try ( : "+val.value+" | <body> ; )"};
+    }
     if (val.type == "DEFINITION") createWord(val);
   });
 };
 
 var run = function(ast) {
   eval(ast);
+  var output = [];
   stack.forEach(function (v) { 
-    $("<p style=\"padding:0px;\">"+v.show+"</p>").appendTo("#stack"); 
+    output.push(v.show);
   });
+  return output.join('\n');
 };
 
 // -------------------------------- Core Library -------------------------------- \\
 
 words = {
-  "+": function (stack) {
+  "+": function () {
     operands = []
     operands.push(stack.pop());
     operands.push(stack.pop());
-    stack.push(createNumber(operands[1].value + operands[0].value)); 
+    pusher(operands[1].value + operands[0].value); 
   },
-  "-": function (stack) {
+  "-": function () {
     operands = []
     operands.push(stack.pop());
     operands.push(stack.pop());
-    stack.push(createNumber(operands[1].value - operands[0].value)); 
+    pusher(operands[1].value - operands[0].value); 
   },
-  "*": function (stack) {
+  "*": function () {
     operands = []
     operands.push(stack.pop());
     operands.push(stack.pop());
-    stack.push(createNumber(operands[1].value * operands[0].value)); 
+    pusher(operands[1].value * operands[0].value); 
   },
-  "/": function (stack) {
+  "/": function () {
     operands = []
     operands.push(stack.pop());
     operands.push(stack.pop());
-    stack.push(createNumber(operands[1].value / operands[0].value)); 
+    pusher(operands[1].value / operands[0].value); 
   },
-  "^": function (stack) {
+  "^": function () {
     operands = []
     operands.push(stack.pop());
     operands.push(stack.pop());
-    stack.push(createNumber(Math.pow(operands[1].value,operands[0].value)))
+    pusher(Math.pow(operands[1].value,operands[0].value));
   },
-  ".": function (stack) {
-    $("<p>"+stack.pop().show+"</p>").appendTo("#stdout");
+  ".": function () {
+    alert(stack.pop().show);
   },
-  "print": function (stack) {
+  "print": function () {
     var val = stack.pop();
-    $("<p>"+val.show+"</p>").appendTo("#stdout");
-    stack.push(val);
+    alert(val.show);
+    pusher(val);
   },
-  "println": function (stack) {
+  "println": function () {
     var val = stack.pop();
-    $("<p>"+val.show+"</p>").appendTo("#stdout");
-    stack.push(val);
+    alert(val.show+"\n");
+    pusher(val);
   },
-  "dup": function (stack) {
+  "dup": function () {
     var val = stack.pop();
-    stack.push(val);
-    stack.push(val);
+    pusher(val);
+    pusher(val);
   },
-  "drop": function (stack) {
+  "drop": function () {
     stack.pop();
   },
-  "nip": function (stack) {
+  "nip": function () {
     stack.splice(stack.length-2,1);
   },
-  "over": function (stack) {
-    stack.push(stack[stack.length-2]);
+  "over": function () {
+    pusher(stack[stack.length-2]);
   },
-  "swap": function (stack) {
+  "swap": function () {
     var top = stack[stack.length-1];
     stack[stack.length-1] = stack[stack.length-2];
     stack[stack.length-2] = top;
   },
-  "call": function (stack) {
+  "call": function () {
     var quote = stack.pop();
     eval(quote.value);
   },
-  "and": function (stack) {
+  "and": function () {
     var operands = [];
     operands.push(stack.pop());
     operands.push(stack.pop());
-    operands[1].value && operands[0].value ? stack.push(createBoolean(true)) : stack.push(createBoolean(false));
+    operands[1].value && operands[0].value ? pusher(true) : pusher(false);
   },
-  "or": function (stack) {
+  "or": function () {
     var operands = [];
     operands.push(stack.pop());
     operands.push(stack.pop());
-    operands[1].value || operands[0].value ? stack.push(createBoolean(true)) : stack.push(createBoolean(false));
+    operands[1].value || operands[0].value ? pusher(true) : pusher(false);
   },
-  "=": function (stack) {
+  "=": function () {
     var operands = [];
     operands.push(stack.pop());
     operands.push(stack.pop());
-    operands[1].value == operands[0].value ? stack.push(createBoolean(true)) : stack.push(createBoolean(false));
+    operands[1].value == operands[0].value ? pusher(true) : pusher(false);
   },
-  "<": function (stack) {
+  "<": function () {
     var operands = [];
     operands.push(stack.pop());
     operands.push(stack.pop());
-    operands[1].value < operands[0].value ? stack.push(createBoolean(true)) : stack.push(createBoolean(false));
+    operands[1].value < operands[0].value ? pusher(true) : pusher(false);
   },
-  ">": function (stack) {
+  ">": function () {
     var operands = [];
     operands.push(stack.pop());
     operands.push(stack.pop());
-    operands[1].value > operands[0].value ? stack.push(createBoolean(true)) : stack.push(createBoolean(false));
+    operands[1].value > operands[0].value ? pusher(true) : pusher(false);
   },
-  "<=": function (stack) {
+  "<=": function () {
     var operands = [];
     operands.push(stack.pop());
     operands.push(stack.pop());
-    operands[1].value <= operands[0].value ? stack.push(createBoolean(true)) : stack.push(createBoolean(false));
+    operands[1].value <= operands[0].value ? pusher(true) : pusher(false);
   },
-  ">=": function (stack) {
+  ">=": function () {
     var operands = [];
     operands.push(stack.pop());
     operands.push(stack.pop());
-    operands[1].value >= operands[0].value ? stack.push(createBoolean(true)) : stack.push(createBoolean(false));
+    operands[1].value >= operands[0].value ? pusher(true) : pusher(false);
   },
-  "if": function (stack) {
+  "if": function () {
     var f = stack.pop();
     var t = stack.pop();
     var cond = stack.pop();
     cond.value ? eval(t.value) : eval(f.value);
   },
-  "length": function (stack) {
+  "length": function () {
     var item = stack.pop();
-    stack.push(createNumber(item.value.length));
+    pusher(item.value.length);
   },
-  "range": function (stack) {
+  "range": function () {
     var to = stack.pop().value;
     var from = stack.pop().value;
     var array = [];
     if (to > from) for(var i = from; i <= to; i++) array.push(i);
     else for(var i = from; i >= to; i--) array.push(i);
-    stack.push(createArray(array));
+    pusher(array);
   },
-  "each": function (stack) {
+  "each": function () {
     var quote = stack.pop();
     var array = stack.pop();
     array.value.forEach(function (v) {
-      stack.push({type: v.type, show: v.show, value: v.value});
+      pusher({type: v.type, show: v.show, value: v.value});
       eval(quote.value);
     });
   },
-  "map": function (stack) {
+  "map": function () {
     var quote = stack.pop();
     var array = stack.pop();
     var aux = [];
     array.value.forEach(function (v) {
-      stack.push({type: v.type, show: v.show, value: v.value});
+      pusher({type: v.type, show: v.show, value: v.value});
       eval(quote.value);
       aux.push(stack.pop().value);
     });
-    stack.push(createArray(aux));
+    pusher(aux);
   },
-  "reverse": function (stack) {
+  "reduce": function () {
+    var quote = stack.pop();
+    var init = stack.pop();
+    var array = stack.pop();
+    pusher(init.value);
+    array.value.forEach(function (v) {
+      pusher(v.value);
+      eval(quote.value);
+    });
+  },
+  "reverse": function () {
     var val = stack.pop()
     if (val.type == "ARRAY") {
       var items = []; 
       val.value.forEach(function(v) {
         items.push(v.value)
       }); 
-      stack.push(createArray(items.reverse()));
+      pusher(items.reverse());
     }
-    else if (val.type == "STRING") stack.push(createString(val.value.split('').reverse().join('')));
+    else if (val.type == "STRING") pusher(val.value.split('').reverse().join(''));
   }
 };

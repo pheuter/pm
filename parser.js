@@ -738,7 +738,7 @@ exports.parser = function(){
           pos = savedPos0;
         }
         var result0 = result1 !== null
-          ? (function(items) { var i = []; var s = []; items.forEach(function (v) {v.forEach(function (val) { if(val.type) { i.push({type: val.type, show: val.show, value: val.value}); s.push(val.show);}});}); return {type:"ARRAY", show: "{"+s+"}",value:i};})(result1[1])
+          ? (function(items) { var i = []; var s = []; items.forEach(function (v) {v.forEach(function (val) { if(val.type) { i.push({type: val.type, show: val.show, value: val.value}); s.push(val.show);}});}); return {type:"ARRAY", show: "{"+s.join(' ')+"}",value:i};})(result1[1])
           : null;
         
         

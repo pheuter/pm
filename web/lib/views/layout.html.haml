@@ -1,25 +1,47 @@
 %html{xmlns: "http://www.w3.org/1999/xhtml"}
   %head
-    %title pm | stack-based programming language | Web Frontend
-    %link{ rel: 'stylesheet', href: '/public/css/style.css' }
+    %title pm | post mortem | stack-based programming language
+    %link{ rel: 'stylesheet', type: 'text/css', href: '/public/css/style.css' }
+    %link{ rel: 'stylesheet', type: 'text/css', href: 'http://github.com/colingourlay/frak/raw/master/frak.css', media:'screen and (min-device-width: 481px)' }
     %link{ href: 'http://fonts.googleapis.com/css?family=Reenie+Beanie', rel: 'stylesheet', type: 'text/css' }
-    %link{ href: 'http://fonts.googleapis.com/css?family=Vollkorn', rel: 'stylesheet', type: 'text/css' }
-    %link{ href: 'http://fonts.googleapis.com/css?family=Nobile', rel: 'stylesheet', type: 'text/css' }
-    %link{ href: 'http://fonts.googleapis.com/css?family=Cardo', rel: 'stylesheet', type: 'text/css' }
-    %link{ href: 'http://fonts.googleapis.com/css?family=IM+Fell+English+SC', rel: 'stylesheet', type: 'text/css' }
+    %link{ href: 'http://fonts.googleapis.com/css?family=Droid+Sans:bold', rel: 'stylesheet', type: 'text/css' }
     %script{ src: 'http://code.jquery.com/jquery-1.4.2.min.js', type: 'text/javascript' }
     %script{ src: '/public/js/parser.js', type: 'text/javascript' }
     %script{ src: '/public/js/interpreter.js', type: 'text/javascript' }    
+    %script{ src: '/public/js/jquery.console.js', type: 'text/javascript' }
   %body
     %a{ href: 'http://github.com/pheuter/pm' }
       %img{ style: 'position: absolute; top: 0; left: 0; border: 0;', src: 'http://s3.amazonaws.com/github/ribbons/forkme_left_orange_ff7600.png', alt:'Fork me on GitHub' }
-    %div#stdout
-      %p STDOUT
-    %div#search
-      %form{ name: 'input'}
-        %input{ type: 'text', id: 'inputtext', value: '1 1 + .', onKeyPress: 'return submitenter(this,event);' }
-      %div#stack
-        %p STACK
-    %a{ href: 'http://markfayngersh.com' }
-      %p{ style: 'color: #000099; font-family: Reenie Beanie, arial, serif; font-size:32px' } Mark Fayngersh
-    != body
+    %div{ class: 'container' }
+      %div{ id: 'header', class:'frak' }
+        %div{ class: 'quarter' }
+          %div{ class: 'module' }
+            %h1{ id: 'title' } pm
+        %div{ class: 'quarter x3' }
+          %div{ class: 'module' }
+            %h3{ id: 'subtitle' } post mortem
+      %div{ class: 'frak' }
+        %div{ class: 'fifth' }
+          %div{ id: 'downloads', class: 'module' }
+            %h2{ style: 'font-size:18px;' } Get
+            %p
+              %a{ href: 'http://github.com/pheuter/Alpha-Streaming/zipball/master' }
+                %img{ border: 0, width: 142, height: 144, src: 'http://github.com/images/modules/download/zip.png' }
+        %div{ class: 'half' }
+          %div{ class: 'module' }
+            %h2{ style: 'font-size:18px;' } Snippet
+            %script{ src:'http://gist.github.com/575344.js?file=gistfile1.pl' }
+        %div{ class: 'quarter' }
+          %div{ class: 'module' }
+            %h2{ style: 'font-size:18px;' } About
+            %p{ style: 'font-size:12px;font-weight:normal;' } pm is a stack-based programming language resembling the likes of Forth and Factor.
+      %div{ id: 'footer', class: 'frak' }
+        %div{ class: 'whole' }
+          %div{ class: 'module' }
+            %span
+              %a{ style: 'color: #D14;', href: 'http://markfayngersh.com' } Blog
+              |
+              %a{ style: 'color:blue;', href: 'http://twitter.com/pheuter' } Twitter
+              |
+              %a{ style: 'color:orange;', href: 'http://github.com/pheuter' } GitHub
+      !=body
