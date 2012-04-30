@@ -1,0 +1,120 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>pm by pheuter</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>pm</h1>
+        <p>post mortem - A stack-based programming language written in NodeJS and parsed using PEG.js</p>
+        <p class="view"><a href="https://github.com/pheuter/pm">View the Project on GitHub <small>pheuter/pm</small></a></p>
+        <ul>
+          <li><a href="https://github.com/pheuter/pm/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/pheuter/pm/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/pheuter/pm">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h3>About</h3>
+
+<p><strong>pm</strong> is a stack-based programming language resembling the likes of Forth and Factor. pm supports common stack operations as well as control flow and function definition. Here are several examples of <strong>pm</strong> code. Feel free to visit the <a href="http://github.com/pheuter/pm/wiki">wiki</a> for more information.</p>
+
+<p><em>Call Quotations</em></p>
+
+<div class="highlight">
+<pre>[<span class="nb"> </span><span class="mi">1 1 </span><span class="o">+ </span>]<span class="nb"> call</span>
+</pre>
+</div>
+
+
+<p><strong>2</strong></p>
+
+<hr><p><em>Iteration</em></p>
+
+<div class="highlight">
+<pre><span class="mi">1 5 </span>range<span class="nb"> </span>[<span class="nb"> dup </span><span class="o">* </span>]<span class="nb"> map</span>
+</pre>
+</div>
+
+
+<p><strong>{ 1 4 9 16 25 }</strong></p>
+
+<hr><p><em>Control Flow</em></p>
+
+<div class="highlight">
+<pre><span class="mi">144 12 2 </span><span class="o">^ = </span>[<span class="nb"> </span><span class="no">t </span>]<span class="nb"> </span>[<span class="nb"> </span><span class="no">f </span>]<span class="nb"> if</span>
+</pre>
+</div>
+
+
+<p><strong>t</strong></p>
+
+<hr><p><em>Defining Functions</em></p>
+
+<div class="highlight">
+<pre><span class="k">:</span> <span class="nf">factorial</span><span class="nb"> </span>|<span class="nb"> </span><span class="mi">1 </span><span class="nb">swap </span>range<span class="nb"> </span><span class="mi">1 </span>[<span class="nb"> </span><span class="o">* </span>]<span class="nb"> reduce </span><span class="k">;</span>
+<span class="mi">5 </span>factorial<span class="nb"></span>
+</pre>
+</div>
+
+
+<p><strong>120</strong></p>
+
+<hr><h3>Requirements</h3>
+
+<p>Make sure you have <em>NodeJS</em> installed on your system</p>
+
+<div class="highlight">
+<pre><span class="nv">$ </span>wget http://github.com/ry/node/tarball/master
+<span class="nv">$ </span>tar xf *node*.tar.gz
+<span class="nv">$ </span><span class="nb">cd</span> *node* <span class="o">&amp;&amp;</span> ./configure <span class="o">&amp;&amp;</span> make <span class="o">&amp;&amp;</span> sudo make install
+</pre>
+</div>
+
+
+<h3>Usage</h3>
+
+<p>To run a file: </p>
+
+<div class="highlight">
+<pre><span class="nv">$ </span>./interpreter.js <span class="nb">test</span>/test.pm
+</pre>
+</div>
+
+
+<p>To run interactively:</p>
+
+<pre><code>$ ./interpreter.js
+</code></pre>
+
+<p>To run through the web: </p>
+
+<div class="highlight">
+<pre><span class="nv">$ </span><span class="nb">cd </span>web <span class="o">&amp;&amp;</span> node server.js
+</pre>
+</div>
+
+
+<p>and navigate to <code>localhost:8080</code></p>
+      </section>
+    </div>
+    <footer>
+      <p>Project maintained by <a href="https://github.com/pheuter">pheuter</a></p>
+      <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
+    </footer>
+    <!--[if !IE]><script>fixScale(document);</script><!--<![endif]-->
+    
+  </body>
+</html>
