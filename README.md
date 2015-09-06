@@ -1,5 +1,7 @@
 # pm (*post mortem*)
 
+![PM](https://cloud.githubusercontent.com/assets/92698/9705881/91faf816-54a1-11e5-95ad-cba228f58520.png)
+
 A stack-based programming language resembling the likes of Forth, Factor.
 
 ## Requirements
